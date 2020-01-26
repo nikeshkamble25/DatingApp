@@ -52,3 +52,4 @@ DatingApp.API/bin
 DatingApp.API/obj
 DatingApp.API/obj
 DatingApp.API/*.db
+DatingApp.API/appsetting.json
