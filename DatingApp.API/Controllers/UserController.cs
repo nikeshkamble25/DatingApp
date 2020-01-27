@@ -9,6 +9,7 @@ using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
@@ -26,8 +27,8 @@ namespace DatingApp.API.Controllers
             this._repo = repo;
             this._config = config;
         }
-        
-        [Authorize]
+
+        // [Authorize]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDto userDto)
         // public async Task<IActionResult> Register([FromBody]UserRegisterDto userDto)
@@ -59,9 +60,11 @@ namespace DatingApp.API.Controllers
                 new Claim(ClaimTypes.Name,userFromRepo.Username)
             };
 
+            var keyToken = _config.GetSection("AppSettings:Token").Value;
+
             var key = new SymmetricSecurityKey(Encoding
                         .UTF8
-                        .GetBytes(_config.GetSection("AppSettings:Token").Value)
+                        .GetBytes(keyToken)
                     );
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -72,6 +75,8 @@ namespace DatingApp.API.Controllers
                 SigningCredentials = creds
             };
             var tokenHandler = new JwtSecurityTokenHandler();
+
+            IdentityModelEventSource.ShowPII = true;
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 

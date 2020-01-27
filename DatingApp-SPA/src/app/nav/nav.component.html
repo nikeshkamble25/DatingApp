@@ -1,0 +1,85 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="#">Dating App</a>
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item active">
+      <a class="nav-link" href="#"
+        >Matches <span class="sr-only">(current)</span></a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Lists</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Messages</a>
+    </li>
+  </ul>
+  <div *ngIf="loggedIn()" class="dropdown">
+    <a id="lblUserText" class="dropdown-toggle text-light">Welcome User</a>
+    <div class="dropdown-divider"></div>
+    <a class="text-light" id="btnLogout" (click)="logOut()">
+     Logout
+    </a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Edit Profile</a >
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#" ><i class="fa fa-user"></i> Logout</a >
+    </div>
+  </div>
+  <form
+  *ngIf="!loggedIn()"
+    #loginForm="ngForm"
+    class="form-inline my-2 my-lg-0"
+    (ngSubmit)="login()"
+  >
+    <input
+      class="form-control mr-sm-2"
+      type="text"
+      required
+      name="username"
+      [(ngModel)]="model.username"
+      placeholder="Username"
+      aria-label="Username"
+      id="txtLoginUsername"
+    />
+    <input
+      class="form-control mr-sm-2"
+      type="Password"
+      name="password"
+      required
+      placeholder="Password"
+      [(ngModel)]="model.password"
+      aria-label="Password"
+      id="txtLoginPassword"
+    />
+    <button
+      [disabled]="!loginForm.valid"
+      class="btn btn-success my-2 my-sm-0"
+      type="submit"
+      id="btnLogin"
+    >
+      Login
+    </button>
+  </form>
+</nav>
+<br />
+<br />
+<br />
+<br />
+<br />
+<!-- <p>
+ Valid: {{loginForm.valid}}<br/>
+ Touch: {{loginForm.touched}}<br/>
+ Dirty: {{loginForm.dirty}}<br/>
+ Value: {{loginForm.value|json}}<br/><br/>
+
+
+ User name Valid: {{username.valid}}<br/>
+ User name Touch: {{username.touched}}<br/>
+ User name Dirty: {{username.dirty}}<br/>
+ User name Value: {{username.value|json}}<br/><br/>
+ 
+ password Valid: {{password.valid}}<br/>
+ password Touch: {{password.touched}}<br/>
+ password Dirty: {{password.dirty}}<br/>
+ password Value: {{password.value|json}}<br/>
+</p> -->
