@@ -6,7 +6,6 @@ context("Dating App Authentication Flow test", () => {
   it("#0001: Register User With Random User Name", () => {
     describe("start test", () => {
       var username = "nikesh" + Math.round(Math.random() * 10000);
-
       cy.get("#btnRegister").click();
       cy.get("#btnUsername").type(username);
       cy.get("#btnPassword").type(username);

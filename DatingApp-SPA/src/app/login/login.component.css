@@ -1,0 +1,41 @@
+.container {
+  height: 100%;
+}
+.row {
+  height: 100%;
+}
+.login-logo {
+  background-color: #4304a7;
+  box-shadow: 1px 0px 10px #777 !important;
+  background-image: url("~/assets/images/bg-4.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+.logo-name {
+  color: white;
+  text-shadow: 5px 5px 5px black;
+  font-size: 40px;
+  align-self: center;
+  font-family: Poppins,Helvetica,sans-serif;
+  flex: 1 0 auto;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+}
+.logo-sub-name {
+  color: #aaa;
+  text-shadow: 5px 5px 5px black;
+  font-size: 15px;
+  align-self: center;
+  font-family: Poppins,Helvetica,sans-serif;
+}
+.logo {
+  color:white;
+  font-size: 90px;
+  text-shadow: 3px 3px 5px black;
+}
+.divider{
+  height: 100px;
+}
