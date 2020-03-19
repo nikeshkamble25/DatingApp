@@ -26,6 +26,7 @@ export class PhotoEditorComponent implements OnInit {
     private userService: UserService,
     private alertify: AlertyfyService
   ) {}
+
   ngOnInit() {
     this.initilizeUploader();
   }
@@ -63,10 +64,14 @@ export class PhotoEditorComponent implements OnInit {
           description: ""
         };
         this.photos.push(photo);
+        if(photo.isMain){
+          this.authService.changeMemberPhoto(photo.url);
+        }
         this.alertify.success("Photo(s) uploaded successfully");
       }
     };
   }
+
   public fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }

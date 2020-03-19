@@ -6,14 +6,17 @@ import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HammerGestureConfig } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
-import { BsDropdownModule, TabsModule } from "ngx-bootstrap";
-import { FormsModule } from "@angular/forms";
+import { BsDropdownModule, TabsModule, BsDatepickerModule } from "ngx-bootstrap";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { JwtModule } from "@auth0/angular-jwt";
 import { NgxGalleryModule } from "ngx-gallery";
 import { FileUploadModule } from "ng2-file-upload";
+import { TimeAgoPipe } from "time-ago-pipe";
+
 
 import { ErrorInterceptorProvider } from "./_services/error.interceptor";
+
 
 import { AppComponent } from "./app.component";
 import { NavComponent } from "./nav/nav.component";
@@ -27,12 +30,14 @@ import { MemberCardComponent } from "./members/member-card/member-card.component
 import { MemberDetailComponent } from "./members/member-detail/member-detail.component";
 import { MemberEditComponent } from "./members/member-edit/member-edit.component";
 
+
 import { AuthGuard } from "./_guards/auth.guard";
 import { appRoutes } from "src/routes";
 import { MemberDetailResolver } from "./_resolver/member-detail.resolver";
 import { MemberListResolver } from "./_resolver/member-list.resolver";
 import { MemberEditResolver } from "./_resolver/member-edit.resolver";
 import { PhotoEditorComponent } from "./members/photo-editor/photo-editor.component";
+
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -58,13 +63,16 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberCardComponent,
     MemberDetailComponent,
     MemberEditComponent,
-    PhotoEditorComponent
+    PhotoEditorComponent,
+    TimeAgoPipe
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
     BsDropdownModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     TabsModule.forRoot(),
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
@@ -76,7 +84,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
       }
     }),
     NgxGalleryModule,
-    FileUploadModule
+    FileUploadModule,
+    ReactiveFormsModule
   ],
   providers: [
     MemberDetailResolver,

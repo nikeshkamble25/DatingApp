@@ -20,7 +20,7 @@
   </ul>
   <div style="cursor: pointer;" *ngIf="loggedIn()" class="dropdown" dropdown>
     <span class="mr-1">
-      <img src="{{ photoUrl }}" alt="" />
+      <img src="{{ photoUrl||'../../../../assets/user.png' }}" alt="" />
     </span>
     <a
       id="lblUserText"
