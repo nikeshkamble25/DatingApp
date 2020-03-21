@@ -11,6 +11,7 @@ import { MemberListResolver } from "./app/_resolver/member-list.resolver";
 import { MemberEditComponent } from "./app/members/member-edit/member-edit.component";
 import { MemberEditResolver } from "./app/_resolver/member-edit.resolver";
 import { PreventUnsavedChanges } from "./app/_guards/prevent.unsaved-changes.guard";
+import { ListsResolver } from './app/_resolver/list.resolver';
 
 export const appRoutes: Routes = [
   { path: "", component: HomeComponent, pathMatch: "full" },
@@ -41,7 +42,8 @@ export const appRoutes: Routes = [
       },
       {
         path: "lists",
-        component: ListsComponent
+        component: ListsComponent,
+        resolve: { users: ListsResolver }
       }
     ]
   },

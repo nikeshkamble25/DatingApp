@@ -38,12 +38,6 @@ export class MemberEditComponent implements OnInit {
     );
   }
   updateUser() {
-    const nums = of([1, 2, 3, 4, 5], 1, 2, 3);
-    nums.pipe(obj => {
-      console.log(obj);
-      return of(null);
-    });
-
     this.userService
       .updateUser(this.authService.decodedToken.nameid, this.user)
       .subscribe(

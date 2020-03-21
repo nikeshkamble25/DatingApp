@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DatingApp.API.DTO;
@@ -12,6 +13,7 @@ namespace DatingApp.API.Helpers
             CreateMap<User, UserForListDto>()
             .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url))
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
+            CreateMap<List<UserForListDto>, PagedList<User>>();
             CreateMap<User, UserForDetailedDto>()
             .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url))
               .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
