@@ -33,6 +33,7 @@ import { MessagesComponent } from "./messages/messages.component";
 import { MemberCardComponent } from "./members/member-card/member-card.component";
 import { MemberDetailComponent } from "./members/member-detail/member-detail.component";
 import { MemberEditComponent } from "./members/member-edit/member-edit.component";
+import { MemberMessageComponent } from './members/member-message/member-message.component';
 
 import { AuthGuard } from "./_guards/auth.guard";
 import { appRoutes } from "src/routes";
@@ -40,7 +41,8 @@ import { MemberDetailResolver } from "./_resolver/member-detail.resolver";
 import { MemberListResolver } from "./_resolver/member-list.resolver";
 import { MemberEditResolver } from "./_resolver/member-edit.resolver";
 import { PhotoEditorComponent } from "./members/photo-editor/photo-editor.component";
-import { ListsResolver } from './_resolver/list.resolver';
+import { ListsResolver } from "./_resolver/list.resolver";
+import { MessagesResolver } from "./_resolver/messages.resolver";
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -67,7 +69,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberDetailComponent,
     MemberEditComponent,
     PhotoEditorComponent,
-    TimeAgoPipe
+    TimeAgoPipe,
+    MemberMessageComponent
   ],
   imports: [
     BrowserModule,
@@ -97,6 +100,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberListResolver,
     MemberEditResolver,
     ListsResolver,
+    MessagesResolver,
     {
       provide: HAMMER_GESTURE_CONFIG,
       useClass: CustomHammerConfig

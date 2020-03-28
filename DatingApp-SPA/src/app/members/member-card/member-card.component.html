@@ -13,7 +13,7 @@
         <button class="btn m-1" [ngClass]="liked?'btn-success':'btn-primary'" (click)="sendLike(user.id)">
           <i class="fa fa-heart"></i>
         </button>
-        <button class="btn btn-primary m-1">
+        <button class="btn btn-primary m-1" [routerLink]="['/members/',user.id]" [queryParams]="{tab:3}" >
           <i class="fa fa-envelope"></i>
         </button>
       </li>
