@@ -19,7 +19,7 @@
               <strong class="primary-font">{{ message.senderKnownAs }}</strong>
               <small class="text-muted float-right">
                 <span class="fa fa-click-o">
-                  {{ message.messageSent | timeAgo }}
+                  {{ message.messageSent | timeago }}
                 </span>
               </small>
             </div>
@@ -39,13 +39,13 @@
             <div class="header">
               <small class="text-muted">
                 <span class="fa fa-click-o">
-                  {{ message.messageSent | timeAgo }}
+                  {{ message.messageSent | timeago }}
                 </span>
                 <span *ngIf="!message.isRead" class="text-danger">
                   (Unread)
                 </span>
                 <span *ngIf="message.isRead" class="text-success">
-                  (Read {{ message.dateRead | timeAgo }})
+                  (Read {{ message.dateRead | timeago }})
                 </span>
               </small>
               <strong class="primary-font  float-right">{{ message.senderKnownAs }}</strong>

@@ -18,7 +18,7 @@ import { RouterModule } from "@angular/router";
 import { JwtModule } from "@auth0/angular-jwt";
 import { NgxGalleryModule } from "ngx-gallery";
 import { FileUploadModule } from "ng2-file-upload";
-import { TimeAgoPipe } from "time-ago-pipe";
+import { TimeagoModule } from 'ngx-timeago';
 
 import { ErrorInterceptorProvider } from "./_services/error.interceptor";
 
@@ -69,7 +69,6 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberDetailComponent,
     MemberEditComponent,
     PhotoEditorComponent,
-    TimeAgoPipe,
     MemberMessageComponent
   ],
   imports: [
@@ -93,7 +92,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     NgxGalleryModule,
     FileUploadModule,
     ReactiveFormsModule,
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    TimeagoModule.forRoot()
   ],
   providers: [
     MemberDetailResolver,
