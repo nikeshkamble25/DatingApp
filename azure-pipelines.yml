@@ -1,35 +1,16 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-name: Build and deploy ASP.Net Core app to Azure Web App - datingappv1
+trigger:
+- master
 
-on:
-  push:
-    branches:
-      - master
+pool:
+  vmImage: 'ubuntu-latest'
 
-jobs:
-  build-and-deploy:
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@master
-
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.0.103'
-
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
-
-    - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v1
-      with:
-        app-name: 'datingappv1'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_aa56b586a5774dea9a6c9a1f8d2075b2 }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: 'DatingApp.API\DatingApp.API.csproj'
+    workingDirectory: 'DatingApp.API'
