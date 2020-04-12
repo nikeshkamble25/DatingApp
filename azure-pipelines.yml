@@ -32,4 +32,4 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration Release'
-    zipAfterPublish: false
+    zipAfterPublish: true
