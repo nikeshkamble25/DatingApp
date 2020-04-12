@@ -11,7 +11,9 @@ import {
   TabsModule,
   BsDatepickerModule,
   PaginationModule,
-  ButtonsModule
+  ButtonsModule,
+  ModalModule,
+  AccordionModule
 } from "ngx-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -34,15 +36,20 @@ import { MemberCardComponent } from "./members/member-card/member-card.component
 import { MemberDetailComponent } from "./members/member-detail/member-detail.component";
 import { MemberEditComponent } from "./members/member-edit/member-edit.component";
 import { MemberMessageComponent } from './members/member-message/member-message.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { PhotoEditorComponent } from "./members/photo-editor/photo-editor.component";
+import { UserManagementComponent } from './admin/admin-panel/user-management/user-management.component';
+import { PhotoManagementComponent } from './admin/admin-panel/photo-management/photo-management.component';
+import { RolesModelComponent } from './admin/admin-panel/roles-model/roles-model.component';
 
 import { AuthGuard } from "./_guards/auth.guard";
 import { appRoutes } from "src/routes";
 import { MemberDetailResolver } from "./_resolver/member-detail.resolver";
 import { MemberListResolver } from "./_resolver/member-list.resolver";
 import { MemberEditResolver } from "./_resolver/member-edit.resolver";
-import { PhotoEditorComponent } from "./members/photo-editor/photo-editor.component";
 import { ListsResolver } from "./_resolver/list.resolver";
 import { MessagesResolver } from "./_resolver/messages.resolver";
+import { HasRoleDirective } from './_directives/has-role.directive';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -69,7 +76,12 @@ export class CustomHammerConfig extends HammerGestureConfig {
     MemberDetailComponent,
     MemberEditComponent,
     PhotoEditorComponent,
-    MemberMessageComponent
+    MemberMessageComponent,
+    AdminPanelComponent,
+    HasRoleDirective,
+    UserManagementComponent,
+    PhotoManagementComponent,
+    RolesModelComponent
   ],
   imports: [
     BrowserModule,
@@ -82,6 +94,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     PaginationModule.forRoot(),
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
+    ModalModule.forRoot(),
+    AccordionModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -105,6 +119,9 @@ export class CustomHammerConfig extends HammerGestureConfig {
       provide: HAMMER_GESTURE_CONFIG,
       useClass: CustomHammerConfig
     }
+  ],
+  entryComponents:[
+    RolesModelComponent
   ],
   bootstrap: [AppComponent]
 })

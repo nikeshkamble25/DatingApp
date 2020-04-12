@@ -4,6 +4,7 @@
     <UserSecretsId>79a3edd0-2092-40a2-a04d-dcb46d5ca9ed</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>&#xD;
+  <Folder Include="wssroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0"/>

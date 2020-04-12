@@ -1,0 +1,35 @@
+<accordion  [isAnimated]="true">
+  <accordion-group *ngFor="let user of adminPhotoData">
+    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+      <div class="pull-left float-left">{{user.userName}}</div>
+      <img class="float-right pull-right" style="width:50px" src="{{user.photoUrl}}"/>
+    </button>
+    <div class="row">
+      <div class="col-sm-2" *ngFor="let photo of user.photos">
+        <div>
+          <img
+            src="{{ photo.url }}"
+            class="img-thumbnail p-1"
+            alt=""
+          />
+        </div>
+        <div class="text-center">
+          <button
+            type="button"
+            class="btn btn-success btn-sm mr-1"
+            (click)="ApproveImage(user,photo.id)"
+          >
+            Approve
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-danger"
+            (click)="RejectImage(user,photo.id)"
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    </div>
+  </accordion-group>
+</accordion>

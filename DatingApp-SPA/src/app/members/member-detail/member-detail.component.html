@@ -4,7 +4,7 @@
       <div class="card">
         <img
           class="card-img-top img-thumnail"
-          src="{{ user.photoUrl }}"
+          src="{{ user.photoUrl || '../../../../../assets/user.png' }}"
           alt="{{ user.knownAs }}"
         />
         <div class="card-body">
@@ -24,7 +24,7 @@
             <strong>
               Last Active:
             </strong>
-            <p>{{ user.lastActive | timeago}}</p>
+            <p>{{ user.lastActive | timeago }}</p>
           </div>
           <div>
             <strong>
@@ -36,7 +36,9 @@
         <div class="card-footer">
           <div class="btn-group d-flex">
             <button class="btn btn-primary w-100">Like</button>
-            <button class="btn btn-success w-100" (click)="selectTab(3)">Message</button>
+            <button class="btn btn-success w-100" (click)="selectTab(3)">
+              Message
+            </button>
           </div>
         </div>
       </div>

@@ -35,7 +35,9 @@ namespace DatingApp.API.Data
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var userQuery = _context.Users//.Include(p => p.Photos)
+            var userQuery = _context.Users
+            .Where(p => p.UserRoles.Any(obj => obj.Role.Name == "Member"))
+            //.Include(p => p.Photos)
             // .Include(p => p.Likees)
             // .Include(p => p.Likers)
             .OrderByDescending(obj => obj.LastActive)
@@ -101,7 +103,7 @@ namespace DatingApp.API.Data
 
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
-            return await _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(x => x.IsMain);
+            return await _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(x => x.IsMain && x.IsApproved);
         }
 
         public async Task<Like> GetLike(int userId, int recipientId)

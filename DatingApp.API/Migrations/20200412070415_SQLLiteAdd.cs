@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DatingApp.API.Migrations
 {
-    public partial class IdentityImplementation : Migration
+    public partial class SQLLiteAdd : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -244,7 +244,8 @@ namespace DatingApp.API.Migrations
                     DateAdded = table.Column<DateTime>(nullable: false),
                     IsMain = table.Column<bool>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    PublicId = table.Column<string>(nullable: true)
+                    PublicId = table.Column<string>(nullable: true),
+                    IsApproved = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

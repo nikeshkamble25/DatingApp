@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DatingApp.API.Models;
@@ -16,7 +15,6 @@ namespace DatingApp.API.Data
             {
                 var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
                 var users = JsonConvert.DeserializeObject<List<User>>(userData);
-
                 var roles = new List<Role>
                 {
                     new Role{Name="Member"},
@@ -38,8 +36,12 @@ namespace DatingApp.API.Data
                     // // user.PasswordSalt = passwordSalt;
                     // user.UserName = user.UserName.ToLower();
                     // context.Users.Add(user);
+                    foreach (var photo in user.Photos)
+                    {
+                        photo.IsApproved = true;
+                    }
                     userManager.CreateAsync(user, "password").Wait();
-                    userManager.AddToRoleAsync(user, "Member");
+                    userManager.AddToRoleAsync(user, "Member").Wait();
                 }
                 //context.SaveChanges();
                 var adminUser = new User

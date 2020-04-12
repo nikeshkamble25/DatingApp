@@ -17,5 +17,6 @@ namespace DatingApp.API.Models
         public virtual User User { get; set; }
         public int UserId { get; set; }
         public string PublicId { get; set; }
+        public bool IsApproved { get; set; } = false;
     }
 }

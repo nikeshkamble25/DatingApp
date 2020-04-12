@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -27,7 +28,7 @@ namespace DatingApp.API.Controllers
         private readonly SignInManager<User> _signInManager;
 
         public AuthController(
-            // IAuthRepository repo,
+                // IAuthRepository repo,
                 IConfiguration config,
                 IMapper mapper,
                 UserManager<User> userManager,
@@ -51,6 +52,7 @@ namespace DatingApp.API.Controllers
             //     return BadRequest("Username alread exists");
             var userToCreate = _mapper.Map<User>(userDto);
             var result = await _userManager.CreateAsync(userToCreate, userDto.Password);
+            await _userManager.AddToRoleAsync(userToCreate, "Member");
             // var createdUser = await _repo.Register(userToCreate, userDto.Password);
             var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
             if (result.Succeeded)
@@ -65,17 +67,17 @@ namespace DatingApp.API.Controllers
         // public async Task<IActionResult> Login([FromBody]UserLoginDto loginDto)
         public async Task<IActionResult> Login(UserLoginDto loginDto)
         {
-
             var user = await _userManager.FindByNameAsync(loginDto.Username);
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             if (result.Succeeded)
             {
                 var appUser = _mapper.Map<UserForListDto>(user);
+                var tokenString = await GenerateJWTToken(user);
                 return Ok(new
                 {
                     // token = tokenHandler.WriteToken(token),
-                    token = GenerateJWTToken(user),
-                    user
+                    token = tokenString,
+                    user = appUser
                 });
             }
             return Unauthorized();
@@ -84,13 +86,17 @@ namespace DatingApp.API.Controllers
             // return Unauthorized();
         }
 
-        private string GenerateJWTToken(User user)
+        private async Task<string> GenerateJWTToken(User user)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Name,user.UserName)
             };
+
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+                claims.Add(new Claim(ClaimTypes.Role, role));
 
             var keyToken = _config.GetSection("AppSettings:Token").Value;
 
@@ -112,7 +118,9 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
         }
     }
 }

@@ -7,7 +7,7 @@ import { PaginatedResult } from "../_models/pagination";
 import { map } from "rxjs/operators";
 import { Message } from "../_models/Message";
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class UserService {
   baseUrl = environment.apiUrl;
@@ -41,7 +41,7 @@ export class UserService {
     return this.http
       .get<User[]>(this.baseUrl + "users", { observe: "response", params })
       .pipe(
-        map(response => {
+        map((response) => {
           paginatedResult.result = response.body;
           if (response.headers.get("Pagination") != null) {
             paginatedResult.pagination = JSON.parse(
@@ -52,8 +52,11 @@ export class UserService {
         })
       );
   }
-  getUser(id): Observable<User> {
-    return this.http.get<User>(this.baseUrl + "users/" + id);
+  getUserForEdit(id): Observable<User> {
+    return this.http.get<User>(this.baseUrl + "users/" + id + "/edit");
+  }
+  getUserForDetail(id): Observable<User> {
+    return this.http.get<User>(this.baseUrl + "users/" + id + "/detail");
   }
   updateUser(id: number, user: User) {
     return this.http.put(this.baseUrl + "users/" + id, user);
@@ -93,10 +96,10 @@ export class UserService {
     return this.http
       .get<Message[]>(this.baseUrl + "users/" + id + "/messages", {
         observe: "response",
-        params
+        params,
       })
       .pipe(
-        map(response => {
+        map((response) => {
           paginatedResult.result = response.body;
           if (response.headers.get("Pagination") !== null) {
             paginatedResult.pagination = JSON.parse(
@@ -123,9 +126,11 @@ export class UserService {
     );
   }
   markAsRead(userId: number, messageId: number) {
-    return this.http.post(
-      this.baseUrl + "users/" + userId + "/messages/" + messageId + "/read",
-      {}
-    ).subscribe();
+    return this.http
+      .post(
+        this.baseUrl + "users/" + userId + "/messages/" + messageId + "/read",
+        {}
+      )
+      .subscribe();
   }
 }
