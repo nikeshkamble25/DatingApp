@@ -34,4 +34,8 @@ steps:
     publishWebProjects: true
     arguments: '--configuration Release'
     zipAfterPublish: true
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.zip'
+    targetFolder: '$(build.artifactStagingDirectory)'    
 - task: PublishBuildArtifacts@1
