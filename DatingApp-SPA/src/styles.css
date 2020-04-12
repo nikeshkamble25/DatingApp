@@ -1,7 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../node_modules/bootswatch/dist/united/bootstrap.min.css";
+<<<<<<< HEAD
 
+=======
+>>>>>>> ec13263c7e3bbf4b5e50622088f965a44e34bfe6
 @import "../node_modules/font-awesome/css/font-awesome.min.css";
 @import "../node_modules/alertifyjs/build/css/alertify.css";
 @import "../node_modules/alertifyjs/build/css/themes/bootstrap.min.css";
