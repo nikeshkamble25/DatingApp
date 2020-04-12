@@ -14,7 +14,7 @@ variables:
 
 steps:
 - script: dir
-  workingDirectory: 'DatingApp.API'
+  workingDirectory: '~/DatingApp.API'
   displayName: List contents of a folder
 - task: DotNetCoreCLI@2
   displayName: Restore
