@@ -14,7 +14,7 @@ variables:
 
 steps:
 - script: dir
-  workingDirectory: '\DatingApp.API\'
+  workingDirectory: 'DatingApp.API'
   displayName: List contents of a folder
 - script: DatingApp.API\dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
