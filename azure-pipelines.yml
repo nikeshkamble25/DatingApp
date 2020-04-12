@@ -14,12 +14,12 @@ variables:
 
 steps:
 - script: dir
-  workingDirectory: '~/DatingApp.API'
+  workingDirectory: '~/DatingApp.API/'
   displayName: List contents of a folder
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
     command: restore
-    projects: 'DatingApp.API/DatingApp.API.csproj'
+    projects: '**/*.csproj'
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
