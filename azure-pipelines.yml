@@ -1,0 +1,41 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dir
+  workingDirectory: 'DatingApp.API/'
+  displayName: List contents of a folder
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '**/*.csproj'
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration Release'
+- task: DotNetCoreCLI@2
+  displayName: PublishFiles
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration Release'
+    zipAfterPublish: true
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.zip'
+    targetFolder: '$(build.artifactStagingDirectory)'    
+- task: PublishBuildArtifacts@1
