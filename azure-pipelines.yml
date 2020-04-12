@@ -28,8 +28,10 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration Release'
 - task: DotNetCoreCLI@2
+  displayName: PublishFiles
   inputs:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration Release'
     zipAfterPublish: true
+- task: PublishBuildArtifacts@1
