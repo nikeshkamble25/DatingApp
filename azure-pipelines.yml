@@ -27,3 +27,9 @@ steps:
     command: build
     projects: '**/*.csproj'
     arguments: '--configuration Release'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration Release'
+    zipAfterPublish: false
