@@ -27,3 +27,4 @@ steps:
     definition: '12'
     buildVersionToDownload: 'latest'
     targetPath: '$(Pipeline.Workspace)/wwwroot'
+- task: PublishBuildArtifacts@1
