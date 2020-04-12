@@ -23,5 +23,5 @@ steps:
   inputs:
     command: custom
     customCommand: run build -- --prod
-    workingDir: DatingApp-SPA/
-
+    workingDir: DatingApp-SPA/  
+- task: PublishBuildArtifacts@1
