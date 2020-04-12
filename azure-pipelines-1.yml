@@ -13,13 +13,15 @@ steps:
 - script: dir
   workingDirectory: 'DatingApp-SPA/'
   displayName: List contents of a folder
-- task: NodeTool@0
+- task: Npm@1
   inputs:
-    versionSpec: '10.x'
+    command: 'install'
+    workingDir: 'DatingApp-SPA/'
   displayName: 'Install Node.js'
+- task: Npm@1
+  displayName: 'Build Angular'
+  inputs:
+    command: custom
+    customCommand: run build -- --prod
+    workingDir: DatingApp-SPA/
 
-- script: |
-    npm install -g @angular/cli
-    npm install
-    ng build --prod
-  displayName: 'npm install and build'
