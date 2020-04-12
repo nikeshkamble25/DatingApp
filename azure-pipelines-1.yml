@@ -22,6 +22,11 @@ steps:
   displayName: 'Build Angular'
   inputs:
     command: custom
-    customCommand: run build -- --prod
+    customCommand: run build --prod
     workingDir: DatingApp-SPA/  
-- task: PublishBuildArtifacts@1
+
+
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'angular'
+    targetPath: 'DatingApp-SPA/dist'
