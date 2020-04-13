@@ -3,8 +3,6 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-
-
 trigger:
 - master
 
@@ -62,11 +60,16 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration Release'
-    zipAfterPublish: true
+    zipAfterPublish: false
 
 - task: CopyFiles@2
   inputs:
-    contents: '**/**'
-    targetFolder: '$(build.artifactStagingDirectory)'
-    
+    SourceFolder: 'DatingApp-SPA/src/dist'
+    Contents: '**'
+    TargetFolder: '$(build.artifactStagingDirectory)/wwwroot/'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'DatingApp.API/bin/Release/netcoreapp3.0/'
+    Contents: '**'
+    TargetFolder: '$(build.artifactStagingDirectory)'   
 - task: PublishBuildArtifacts@1
