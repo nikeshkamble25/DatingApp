@@ -61,10 +61,10 @@ steps:
   inputs:
     SourceFolder: 'DatingApp-SPA/src/dist'
     Contents: '**'
-    TargetFolder: 'DatingApp.API/bin/Release/netcoreapp3.0/publish/wwwroot/'
+    TargetFolder: 'DatingApp.API/bin/Release/netcoreapp3.0/wwwroot/'
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: 'DatingApp.API/bin/Release/netcoreapp3.0/publish/'
+    rootFolderOrFile: 'DatingApp.API/bin/Release/netcoreapp3.0/'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
