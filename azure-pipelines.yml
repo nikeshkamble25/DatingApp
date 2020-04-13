@@ -39,6 +39,7 @@ steps:
     targetPath: 'DatingApp-SPA/src/dist'
 
 - task: PublishBuildArtifacts@1
+
 - script: dir
   workingDirectory: 'DatingApp.API/'
   displayName: List contents of a folder
@@ -68,4 +69,4 @@ steps:
 - task: CopyFiles@2
   inputs:
     contents: '**/**'
-    targetFolder: '$(build.artifactStagingDirectory)'    
+    targetFolder: '$(build.artifactStagingDirectory)'
