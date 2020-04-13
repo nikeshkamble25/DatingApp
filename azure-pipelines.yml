@@ -64,8 +64,8 @@ steps:
     targetPath: 'DatingApp-SPA/src/dist'
 - task: PublishBuildArtifacts@1
 - task: CopyFiles@2
-  displayName: 'Copy Files to: $(System.DefaultWorkingDirectory)/_nikeshkamble25.DatingApp/drop/wwwroot'
+  displayName: 'Copy Files to: $(build.artifactStagingDirectory)/_nikeshkamble25.DatingApp/drop/wwwroot'
   inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)/_nikeshkamble25.DatingApp/angular'
-    TargetFolder: '$(System.DefaultWorkingDirectory)/_nikeshkamble25.DatingApp/drop/wwwroot'
+    SourceFolder: $(build.artifactStagingDirectory)/_nikeshkamble25.DatingApp/angular'
+    TargetFolder: $(build.artifactStagingDirectory)/_nikeshkamble25.DatingApp/drop/wwwroot'
 
