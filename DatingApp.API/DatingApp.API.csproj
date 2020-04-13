@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>&#xD;
   <Folder Include="wssroot\" />
-   <None Include="datingapp.db" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0"/>
