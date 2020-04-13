@@ -4,7 +4,8 @@
     <UserSecretsId>79a3edd0-2092-40a2-a04d-dcb46d5ca9ed</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>&#xD;
-  <Content Include="datingapp.db" />
+  <Folder Include="wssroot\" />
+   <None Include="datingapp.db" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0"/>
