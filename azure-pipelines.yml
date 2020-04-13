@@ -62,6 +62,11 @@ steps:
     SourceFolder: 'DatingApp-SPA/src/dist'
     Contents: '**'
     TargetFolder: 'DatingApp.API/bin/Release/netcoreapp3.0/publish/wwwroot/'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'DatingApp.API/'
+    Contents: '**.db'
+    TargetFolder: 'DatingApp.API/bin/Release/netcoreapp3.0/publish/'
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: 'DatingApp.API/bin/Release/netcoreapp3.0/publish'
