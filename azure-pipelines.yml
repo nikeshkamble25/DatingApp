@@ -31,11 +31,6 @@ steps:
     customCommand: run build --prod
     workingDir: DatingApp-SPA/  
 
-- task: PublishPipelineArtifact@0
-  inputs:
-    artifactName: 'angular'
-    targetPath: 'DatingApp-SPA/src/dist'
-
 - script: dir
   workingDirectory: 'DatingApp.API/'
   displayName: List contents of a folder
@@ -69,7 +64,7 @@ steps:
     TargetFolder: '$(build.artifactStagingDirectory)/wwwroot/'
 - task: CopyFiles@2
   inputs:
-    SourceFolder: 'DatingApp.API/bin/Release/netcoreapp3.0/'
+    SourceFolder: 'DatingApp.API/bin/Release/netcoreapp3.0/publish'
     Contents: '**'
-    TargetFolder: '$(build.artifactStagingDirectory)'   
+    TargetFolder: '$(build.artifactStagingDirectory)' 
 - task: PublishBuildArtifacts@1
