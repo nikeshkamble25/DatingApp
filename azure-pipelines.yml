@@ -3,6 +3,8 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
+
+
 trigger:
 - master
 
@@ -16,54 +18,54 @@ steps:
 - script: dir
   workingDirectory: 'DatingApp.API/'
   displayName: List contents of a folder
+
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
     command: restore
     projects: '**/*.csproj'
+
 - task: DotNetCoreCLI@2
   displayName: Build
+
   inputs:
     command: build
     projects: '**/*.csproj'
     arguments: '--configuration Release'
+
 - task: DotNetCoreCLI@2
   displayName: PublishFiles
   inputs:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration Release'
-    zipAfterPublish: false
-- task: ExtractFiles@1
+    zipAfterPublish: true
+
+- task: CopyFiles@2
   inputs:
-    archiveFilePatterns: '*.zip'
-    destinationFolder: '$(build.artifactStagingDirectory)'
-    cleanDestinationFolder: true
-- task: PublishBuildArtifacts@1 
+    contents: '**/**'
+    targetFolder: '$(build.artifactStagingDirectory)'    
+
 - script: dir
   workingDirectory: 'DatingApp-SPA/'
   displayName: List contents of a folder
+
 - task: Npm@1
   inputs:
     command: 'install'
     workingDir: 'DatingApp-SPA/'
   displayName: 'Install Node.js'
+
 - task: Npm@1
   displayName: 'Build Angular'
   inputs:
     command: custom
     customCommand: run build --prod
     workingDir: DatingApp-SPA/  
+
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: 'angular'
     targetPath: 'DatingApp-SPA/src/dist'
-- task: CopyFiles@2
-  inputs:
-    contents: '**/**'
-    targetFolder: '$(build.artifactStagingDirectory)'
+
 - task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
