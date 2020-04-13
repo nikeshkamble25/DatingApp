@@ -34,14 +34,14 @@ steps:
     publishWebProjects: true
     arguments: '--configuration Release'
     zipAfterPublish: false
-- task: PublishBuildArtifacts@1
 - task: CopyFiles@2
   inputs:
-    contents: '**/*.zip'
+    contents: '**/'
     targetFolder: '$(build.artifactStagingDirectory)'    
 - script: dir
   workingDirectory: 'DatingApp-SPA/'
   displayName: List contents of a folder
+- task: PublishBuildArtifacts@1
 - task: Npm@1
   inputs:
     command: 'install'
