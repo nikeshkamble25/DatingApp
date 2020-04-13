@@ -33,7 +33,7 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration Release'
-    zipAfterPublish: false
+    zipAfterPublish: true
 - task: CopyFiles@2
   inputs:
     contents: '**/*.zip'
