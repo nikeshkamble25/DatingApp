@@ -38,8 +38,6 @@ steps:
     artifactName: 'angular'
     targetPath: 'DatingApp-SPA/src/dist'
 
-- task: PublishBuildArtifacts@1
-
 - script: dir
   workingDirectory: 'DatingApp.API/'
   displayName: List contents of a folder
@@ -70,3 +68,5 @@ steps:
   inputs:
     contents: '**/**'
     targetFolder: '$(build.artifactStagingDirectory)'
+    
+- task: PublishBuildArtifacts@1
