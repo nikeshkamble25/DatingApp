@@ -33,11 +33,7 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '--configuration Release'
-    zipAfterPublish: true
-- task: CopyFiles@2
-  inputs:
-    contents: '**/*.zip'
-    targetFolder: '$(build.artifactStagingDirectory)'   
+    zipAfterPublish: false
 - task: ExtractFiles@1
   inputs:
     archiveFilePatterns: '*.zip'
@@ -62,10 +58,7 @@ steps:
   inputs:
     artifactName: 'angular'
     targetPath: 'DatingApp-SPA/src/dist'
-- task: PublishBuildArtifacts@1
 - task: CopyFiles@2
-  displayName: 'Copy Files to: $(build.artifactStagingDirectory)/_nikeshkamble25.DatingApp/drop/wwwroot'
   inputs:
-    SourceFolder: $(build.artifactStagingDirectory)/_nikeshkamble25.DatingApp/angular'
-    TargetFolder: $(build.artifactStagingDirectory)/_nikeshkamble25.DatingApp/drop/wwwroot'
-
+    contents: '**/**'
+    targetFolder: '$(build.artifactStagingDirectory)'
