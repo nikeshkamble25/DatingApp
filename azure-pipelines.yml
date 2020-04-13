@@ -15,6 +15,30 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
+- script: dir
+  workingDirectory: 'DatingApp-SPA/'
+  displayName: List contents of a folder
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'DatingApp-SPA/'
+  displayName: 'Install Node.js'
+
+- task: Npm@1
+  displayName: 'Build Angular'
+  inputs:
+    command: custom
+    customCommand: run build --prod
+    workingDir: DatingApp-SPA/  
+
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'angular'
+    targetPath: 'DatingApp-SPA/src/dist'
+
+- task: PublishBuildArtifacts@1
 - script: dir
   workingDirectory: 'DatingApp.API/'
   displayName: List contents of a folder
@@ -45,27 +69,3 @@ steps:
   inputs:
     contents: '**/**'
     targetFolder: '$(build.artifactStagingDirectory)'    
-
-- script: dir
-  workingDirectory: 'DatingApp-SPA/'
-  displayName: List contents of a folder
-
-- task: Npm@1
-  inputs:
-    command: 'install'
-    workingDir: 'DatingApp-SPA/'
-  displayName: 'Install Node.js'
-
-- task: Npm@1
-  displayName: 'Build Angular'
-  inputs:
-    command: custom
-    customCommand: run build --prod
-    workingDir: DatingApp-SPA/  
-
-- task: PublishPipelineArtifact@0
-  inputs:
-    artifactName: 'angular'
-    targetPath: 'DatingApp-SPA/src/dist'
-
-- task: PublishBuildArtifacts@1
