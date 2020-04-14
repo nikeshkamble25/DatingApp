@@ -6,7 +6,7 @@
             "value": "76f26da0-54bd-411c-9232-062d1f721538"
         },
         "name": {
-            "value": "datingappv1"
+            "value": "datingappv8"
         },
         "location": {
             "value": "Central US"
@@ -42,7 +42,7 @@
             "value": "dotnetcore"
         },
         "errorLink": {
-            "value": "https://datingappv1.scm.azurewebsites.net/detectors?type=tools&name=eventviewer"
+            "value": "https://datingappv8.scm.azurewebsites.net/detectors?type=tools&name=eventviewer"
         }
     }
 }
