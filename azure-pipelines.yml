@@ -77,7 +77,7 @@ steps:
     replaceExistingArchive: true
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '/'
+    SourceFolder: 'VMTemplate/'
     Contents: '**.json'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/VMTemplate/'
 - task: PublishBuildArtifacts@1
