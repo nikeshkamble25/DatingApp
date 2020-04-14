@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "76f26da0-54bd-411c-9232-062d1f721538"
+        },
+        "name": {
+            "value": "datingappv1"
+        },
+        "location": {
+            "value": "Central US"
+        },
+        "hostingEnvironment": {
+            "value": ""
+        },
+        "hostingPlanName": {
+            "value": "ASP-datingapp-898d"
+        },
+        "serverFarmResourceGroup": {
+            "value": "datingapp"
+        },
+        "alwaysOn": {
+            "value": false
+        },
+        "sku": {
+            "value": "Free"
+        },
+        "skuCode": {
+            "value": "F1"
+        },
+        "workerSize": {
+            "value": "0"
+        },
+        "workerSizeId": {
+            "value": "0"
+        },
+        "numberOfWorkers": {
+            "value": "1"
+        },
+        "currentStack": {
+            "value": "dotnetcore"
+        },
+        "errorLink": {
+            "value": "https://datingappv1.scm.azurewebsites.net/detectors?type=tools&name=eventviewer"
+        }
+    }
+}
