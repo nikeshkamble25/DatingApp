@@ -21,7 +21,7 @@ steps:
   displayName: 'Build Angular'
   inputs:
     command: custom
-    customCommand: ng build --prod
+    customCommand: run build --prod
     workingDir: DatingApp-SPA/  
 - script: dir
   workingDirectory: 'DatingApp.API/'
