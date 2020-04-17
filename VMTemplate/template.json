@@ -53,7 +53,7 @@
             "location": "[parameters('location')]",
             "tags": {},
             "dependsOn": [
-                "microsoft.insights/components/datingappv8",
+                "microsoft.insights/components/datingappv12",
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
             ],
             "properties": {
@@ -62,11 +62,11 @@
                     "appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference('microsoft.insights/components/datingappv8', '2015-05-01').InstrumentationKey]"
+                            "value": "[reference('microsoft.insights/components/datingappv12', '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference('microsoft.insights/components/datingappv8', '2015-05-01').ConnectionString]"
+                            "value": "[reference('microsoft.insights/components/datingappv12', '2015-05-01').ConnectionString]"
                         },
                         {
                             "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
@@ -116,7 +116,7 @@
         },
         {
             "apiVersion": "2015-05-01",
-            "name": "datingappv8",
+            "name": "datingappv12",
             "type": "microsoft.insights/components",
             "location": "centralus",
             "tags": {},
