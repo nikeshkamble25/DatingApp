@@ -67,3 +67,15 @@ steps:
     Contents: '**.json'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/VMTemplate/'
 - task: PublishBuildArtifacts@1
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'datingappv1 - Azure'
+    subscriptionId: '76f26da0-54bd-411c-9232-062d1f721538'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'datingappv1rg'
+    location: 'West US'
+    templateLocation: 'Linked artifact'
+    csmFile: 'VMTemplate/template.json'
+    csmParametersFile: 'VMTemplate/parameters.json'
+    deploymentMode: 'Incremental'
