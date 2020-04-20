@@ -1,128 +1,135 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "subscriptionId": {
-            "type": "string"
+        "sites_datingappv1_name": {
+            "defaultValue": "datingappv1",
+            "type": "String"
         },
-        "name": {
-            "type": "string"
-        },
-        "location": {
-            "type": "string"
-        },
-        "hostingEnvironment": {
-            "type": "string"
-        },
-        "hostingPlanName": {
-            "type": "string"
-        },
-        "serverFarmResourceGroup": {
-            "type": "string"
-        },
-        "alwaysOn": {
-            "type": "bool"
-        },
-        "sku": {
-            "type": "string"
-        },
-        "skuCode": {
-            "type": "string"
-        },
-        "workerSize": {
-            "type": "string"
-        },
-        "workerSizeId": {
-            "type": "string"
-        },
-        "numberOfWorkers": {
-            "type": "string"
-        },
-        "currentStack": {
-            "type": "string"
-        },
-        "errorLink": {
-            "type": "string"
+        "serverfarms_ASP_datingappv1rg_94cf_externalid": {
+            "defaultValue": "/subscriptions/76f26da0-54bd-411c-9232-062d1f721538/resourceGroups/datingappv1rg/providers/Microsoft.Web/serverfarms/ASP-datingappv1rg-94cf",
+            "type": "String"
         }
     },
+    "variables": {},
     "resources": [
         {
-            "apiVersion": "2018-11-01",
-            "name": "[parameters('name')]",
             "type": "Microsoft.Web/sites",
-            "location": "[parameters('location')]",
-            "tags": {},
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('sites_datingappv1_name')]",
+            "location": "West US",
+            "kind": "app",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_datingappv1_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_datingappv1_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_ASP_datingappv1rg_94cf_externalid')]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('sites_datingappv1_name'), '/web')]",
+            "location": "West US",
             "dependsOn": [
-                "microsoft.insights/components/datingappv12",
-                "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('sites_datingappv1_name'))]"
             ],
             "properties": {
-                "name": "[parameters('name')]",
-                "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference('microsoft.insights/components/datingappv12', '2015-05-01').InstrumentationKey]"
-                        },
-                        {
-                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                            "value": "[reference('microsoft.insights/components/datingappv12', '2015-05-01').ConnectionString]"
-                        },
-                        {
-                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
-                            "value": "~2"
-                        },
-                        {
-                            "name": "XDT_MicrosoftApplicationInsights_Mode",
-                            "value": "default"
-                        },
-                        {
-                            "name": "ANCM_ADDITIONAL_ERROR_PAGE_LINK",
-                            "value": "[parameters('errorLink')]"
-                        }
-                    ],
-                    "metadata": [
-                        {
-                            "name": "CURRENT_STACK",
-                            "value": "[parameters('currentStack')]"
-                        }
-                    ],
-                    "alwaysOn": "[parameters('alwaysOn')]"
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "phpVersion": "5.6",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$datingappv1",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
                 },
-                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-                "hostingEnvironment": "[parameters('hostingEnvironment')]",
-                "clientAffinityEnabled": true
+                "autoHealEnabled": false,
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "ftpsState": "AllAllowed",
+                "reservedInstanceCount": 0
             }
         },
         {
+            "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2018-11-01",
-            "name": "[parameters('hostingPlanName')]",
-            "type": "Microsoft.Web/serverfarms",
-            "location": "[parameters('location')]",
-            "kind": "",
-            "tags": {},
-            "dependsOn": [],
+            "name": "[concat(parameters('sites_datingappv1_name'), '/', parameters('sites_datingappv1_name'), '.azurewebsites.net')]",
+            "location": "West US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_datingappv1_name'))]"
+            ],
             "properties": {
-                "name": "[parameters('hostingPlanName')]",
-                "workerSize": "[parameters('workerSize')]",
-                "workerSizeId": "[parameters('workerSizeId')]",
-                "numberOfWorkers": "[parameters('numberOfWorkers')]",
-                "hostingEnvironment": "[parameters('hostingEnvironment')]"
-            },
-            "sku": {
-                "Tier": "[parameters('sku')]",
-                "Name": "[parameters('skuCode')]"
-            }
-        },
-        {
-            "apiVersion": "2015-05-01",
-            "name": "datingappv12",
-            "type": "microsoft.insights/components",
-            "location": "centralus",
-            "tags": {},
-            "properties": {
-                "ApplicationId": "[parameters('name')]",
-                "Request_Source": "IbizaWebAppExtensionCreate"
+                "siteName": "datingappv1",
+                "hostNameType": "Verified"
             }
         }
     ]
