@@ -6,15 +6,15 @@ import { NgModule } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HammerGestureConfig } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
-import {
-  BsDropdownModule,
-  TabsModule,
-  BsDatepickerModule,
-  PaginationModule,
-  ButtonsModule,
-  ModalModule,
-  AccordionModule
-} from "ngx-bootstrap";
+
+import { BsDropdownModule}from "ngx-bootstrap/dropdown";
+import { TabsModule}from "ngx-bootstrap/tabs";
+import { BsDatepickerModule}from "ngx-bootstrap/datepicker";
+import { PaginationModule}from "ngx-bootstrap/pagination"; 
+import { ButtonsModule}from "ngx-bootstrap/buttons";
+import { ModalModule}from "ngx-bootstrap/modal";
+import { AccordionModule}from "ngx-bootstrap/accordion";
+
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { JwtModule } from "@auth0/angular-jwt";
@@ -99,8 +99,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ["localhost:5000"],
-        blacklistedRoutes: ["localhost:5000/auth"]
+        allowedDomains: ["localhost:5000"],
+        disallowedRoutes: ["http://localhost:5000/auth"]
       }
     }),
     NgxGalleryModule,

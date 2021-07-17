@@ -5,8 +5,9 @@ import { UserService } from "../_services/user.service";
 import { AlertyfyService } from "../_services/alertyfy.service";
 import { catchError } from "rxjs/operators";
 import { of, Observable } from "rxjs";
+import { PaginatedResult } from "../_models/pagination";
 @Injectable()
-export class ListsResolver implements Resolve<User[]> {
+export class ListsResolver implements Resolve<PaginatedResult<User[]>> {
   pageNumber = 1;
   pageSize = 12;
   likesParams = "Likers";
@@ -16,7 +17,7 @@ export class ListsResolver implements Resolve<User[]> {
     private router: Router,
     private alertify: AlertyfyService
   ) {}
-  resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
+  resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<User[]>> {
     const returnObject = this.userService
       .getUsers(this.pageNumber, this.pageSize, null, this.likesParams)
       .pipe(

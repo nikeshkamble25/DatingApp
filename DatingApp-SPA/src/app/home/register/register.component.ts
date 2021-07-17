@@ -7,7 +7,7 @@ import {
   Validators,
   FormBuilder
 } from "@angular/forms";
-import { BsDatepickerConfig } from "ngx-bootstrap";
+import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 import { User } from "src/app/_models/user";
 import { Router } from "@angular/router";
 

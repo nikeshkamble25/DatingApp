@@ -7,8 +7,9 @@ import { catchError } from "rxjs/operators";
 import { of, Observable } from "rxjs";
 import { Message } from "../_models/Message";
 import { AuthService } from "../_services/auth.service";
+import { PaginatedResult } from "../_models/pagination";
 @Injectable()
-export class MessagesResolver implements Resolve<Message[]> {
+export class MessagesResolver implements Resolve<PaginatedResult<Message[]>> {
   pageNumber = 1;
   pageSize = 5;
   messageContainer = "Unread";
@@ -18,7 +19,7 @@ export class MessagesResolver implements Resolve<Message[]> {
     private alertify: AlertyfyService,
     private authService: AuthService
   ) {}
-  resolve(route: ActivatedRouteSnapshot): Observable<Message[]> {
+  resolve(route: ActivatedRouteSnapshot): Observable<PaginatedResult<Message[]>> {
     const returnObject = this.userService
       .getMessages(
         this.authService.decodedToken.nameid,

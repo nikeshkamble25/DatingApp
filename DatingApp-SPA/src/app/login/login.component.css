@@ -7,7 +7,7 @@
 .login-logo {
   background-color: #4304a7;
   box-shadow: 1px 0px 10px #777 !important;
-  background-image: url("~/assets/images/bg-4.jpg");
+  background-image: url("/assets/images/bg-4.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   height: 100%;
