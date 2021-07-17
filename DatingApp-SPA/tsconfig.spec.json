@@ -1,8 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "rules":{
-    "no-string-literal"
-  },
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
