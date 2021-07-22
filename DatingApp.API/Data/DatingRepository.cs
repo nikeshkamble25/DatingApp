@@ -37,9 +37,6 @@ namespace DatingApp.API.Data
         {
             var userQuery = _context.Users
             .Where(p => p.UserRoles.Any(obj => obj.Role.Name == "Member"))
-            //.Include(p => p.Photos)
-            // .Include(p => p.Likees)
-            // .Include(p => p.Likers)
             .OrderByDescending(obj => obj.LastActive)
             .AsQueryable();
             userQuery = userQuery.Where(u => u.Id != userParams.UserId).AsQueryable();
@@ -80,8 +77,6 @@ namespace DatingApp.API.Data
         private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
         {
             var user = await _context.Users
-            // .Include(x => x.Likers)
-            // .Include(x => x.Likees)
             .FirstOrDefaultAsync(u => u.Id == id);
             if (likers)
                 return user.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId);
@@ -90,7 +85,6 @@ namespace DatingApp.API.Data
                 return user.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId);
             }
         }
-
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
@@ -100,28 +94,22 @@ namespace DatingApp.API.Data
             var photo = await _context.Photos.FirstOrDefaultAsync(photo => photo.Id == id);
             return photo;
         }
-
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
             return await _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(x => x.IsMain && x.IsApproved);
         }
-
         public async Task<Like> GetLike(int userId, int recipientId)
         {
             return await _context.Likes
             .FirstOrDefaultAsync(u => u.LikerId == userId && u.LikeeId == recipientId);
         }
-
         public async Task<Message> GetMessage(int id)
         {
             return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
         }
-
         public async Task<PagedList<Message>> GetMessageForUser(MessageParams messageParams)
         {
             var messages = _context.Messages
-                             //  .Include(u => u.Sender).ThenInclude(p => p.Photos)
-                             //  .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                              .AsQueryable();
             switch (messageParams.MessageContainer)
             {
@@ -142,17 +130,47 @@ namespace DatingApp.API.Data
             return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
 
         }
-
         public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
         {
             var messages = await _context.Messages
-                           //    .Include(u => u.Sender).ThenInclude(p => p.Photos)
-                           //    .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                            .Where(m => m.RecipientId == userId && m.SenderId == recipientId && !m.RecipientDeleted
                            || m.RecipientId == recipientId && m.SenderId == userId && !m.SenderDeleted)
                            .OrderByDescending(m => m.MessageSent)
                            .ToListAsync();
             return messages;
+        }
+
+        public async Task<IEnumerable<Message>> GetMessageThread(string userName, string recipientUserName)
+        {
+             var messages = await _context.Messages
+                           .Where(m => m.Recipient.UserName == userName && m.Sender.UserName == recipientUserName && !m.RecipientDeleted
+                           || m.Recipient.UserName == recipientUserName && m.Sender.UserName == userName && !m.SenderDeleted)
+                           .OrderByDescending(m => m.MessageSent)
+                           .ToListAsync();
+            return messages;
+        }
+
+        public void AddGroup(Group group)
+        {
+            _context.Groups.Add(group);
+        }
+
+        public void RemoveConnection(Connection connection)
+        {
+              _context.Connections.Remove(connection);
+        }
+
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+              return await _context.Connections
+                                .FirstOrDefaultAsync(x=>x.ConnectionId == connectionId);
+
+        }
+        public async Task<Group> GetMessageGroup(string groupName)
+        {
+            return await _context.Groups
+                                .Include(x=>x.Connections)
+                                .FirstOrDefaultAsync(x=>x.Name == groupName);
         }
     }
 }

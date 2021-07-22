@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -13,16 +14,12 @@ namespace DatingApp.API.Data
         public AuthRepository(DataContext context)
         {
             _context = context;
-
         }
         public async Task<User> Login(string username, string password)
         {
             var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.UserName.ToLower() == username.ToLower());
             if (user == null)
                 return null;
-            // if (!VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
-            //     return null;
-            
             return user;
         }
 
@@ -45,8 +42,6 @@ namespace DatingApp.API.Data
             byte[] passwordHash;
             byte[] passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
-            // user.PasswordHash = passwordHash;
-            // user.PasswordSalt = passwordSalt;
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
@@ -57,6 +52,22 @@ namespace DatingApp.API.Data
             if (await _context.Users.AnyAsync(x => x.UserName == username))
                 return true;
             return false;
+        }
+        public async Task<User> GetUser(int userId)
+        {
+            var test = await _context.Users.ToListAsync();
+            var user = await _context.Users
+                            .Where(x => x.Id == userId)
+                            .SingleOrDefaultAsync();
+            return user;
+        }
+        public async Task<User> GetUser(string userName)
+        {
+            var test = await _context.Users.ToListAsync();
+            var user = await _context.Users
+                            .Where(x => x.UserName == userName)
+                            .SingleOrDefaultAsync();
+            return user;
         }
         private void CreatePasswordHash(
             string password,

@@ -18,5 +18,11 @@ namespace DatingApp.API.Data
         Task<Message> GetMessage(int id);
         Task<PagedList<Message>> GetMessageForUser(MessageParams userParams);
         Task<IEnumerable<Message>> GetMessageThread(int id, int recipientId);
+        Task<IEnumerable<Message>> GetMessageThread(string userName, string recipientUserName);
+        void AddGroup(Group group);
+        void RemoveConnection(Connection connection);
+        Task<Connection> GetConnection(string connectionId);
+        Task<Group> GetMessageGroup(string groupName);
     }
+    
 }
