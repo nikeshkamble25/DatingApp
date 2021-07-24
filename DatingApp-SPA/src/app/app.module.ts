@@ -18,7 +18,7 @@ import { AccordionModule}from "ngx-bootstrap/accordion";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { JwtModule } from "@auth0/angular-jwt";
-import { NgxGalleryModule } from "ngx-gallery";
+import { NgxGalleryModule } from "ngx-gallery-9";
 import { FileUploadModule } from "ng2-file-upload";
 import { TimeagoModule } from 'ngx-timeago';
 
@@ -42,7 +42,6 @@ import { UserManagementComponent } from './admin/admin-panel/user-management/use
 import { PhotoManagementComponent } from './admin/admin-panel/photo-management/photo-management.component';
 import { RolesModelComponent } from './admin/admin-panel/roles-model/roles-model.component';
 
-import { AuthGuard } from "./_guards/auth.guard";
 import { appRoutes } from "src/routes";
 import { MemberDetailResolver } from "./_resolver/member-detail.resolver";
 import { MemberListResolver } from "./_resolver/member-list.resolver";
@@ -50,6 +49,7 @@ import { MemberEditResolver } from "./_resolver/member-edit.resolver";
 import { ListsResolver } from "./_resolver/list.resolver";
 import { MessagesResolver } from "./_resolver/messages.resolver";
 import { HasRoleDirective } from './_directives/has-role.directive';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -81,7 +81,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     HasRoleDirective,
     UserManagementComponent,
     PhotoManagementComponent,
-    RolesModelComponent
+    RolesModelComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -123,6 +124,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
   entryComponents:[
     RolesModelComponent
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule {}

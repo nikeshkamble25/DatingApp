@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from "@angular/core";
 import { User } from "src/app/_models/user";
 import { AlertyfyService } from "src/app/_services/alertyfy.service";
 import { AuthService } from "src/app/_services/auth.service";
+import { PresenceService } from "src/app/_services/presence.service";
 import { UserService } from "src/app/_services/user.service";
 
 @Component({
@@ -14,9 +15,10 @@ export class MemberCardComponent implements OnInit {
   liked: boolean = false;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private userService: UserService,
-    private alertify: AlertyfyService
+    private alertify: AlertyfyService,
+    public presence: PresenceService
   ) {}
 
   ngOnInit() {

@@ -1,17 +1,24 @@
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { BehaviorSubject, Observable } from "rxjs";
 import { User } from "../_models/user";
+import { Group } from "../_models/group";
 import { PaginatedResult } from "../_models/pagination";
-import { map } from "rxjs/operators";
-import { Message } from "../_models/Message";
+import { map, take } from "rxjs/operators";
+import { Message, MessageR } from "../_models/Message";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 @Injectable({
   providedIn: "root",
 })
 export class UserService {
+  private hubConnection: HubConnection
+  private messageThreadSource = new BehaviorSubject<Message[]>([]);
   baseUrl = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+  hubUrl = environment.hubUrl;
+  messageThread$ = this.messageThreadSource.asObservable();;
+
+  constructor(private http: HttpClient) { }
   getUsers(
     page?,
     itemsPerParams?,
@@ -116,8 +123,14 @@ export class UserService {
       this.baseUrl + "users/" + id + "/messages/thread/" + recipientId
     );
   }
-  sendMessage(id: number, message: Message) {
-    return this.http.post(this.baseUrl + "users/" + id + "/messages", message);
+  async sendMessage(message: MessageR) {
+    return this.hubConnection.invoke('SendMessage',
+      {
+        SenderId: message.SenderId,
+        RecipientId: message.RecipientId,
+        Content: message.Content
+      }
+    ).catch(error => console.log(error));
   }
   deleteMessage(id: number, userId: number) {
     return this.http.post(
@@ -132,5 +145,43 @@ export class UserService {
         {}
       )
       .subscribe();
+  }
+  createHubConnection(user: User, othrUserName: string) {
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl(this.hubUrl + 'message?user=' + othrUserName, {
+        accessTokenFactory: () => localStorage.getItem("token")
+      })
+      .withAutomaticReconnect()
+      .build();
+
+    this.hubConnection
+      .start()
+      .catch(error => console.log(error));
+
+    this.hubConnection.on('ReceiveMessageThread', messages => {
+      this.messageThreadSource.next(messages);
+    });
+    this.hubConnection.on('NewMessage', message => {
+      this.messageThread$.pipe(take(1)).subscribe(messages => {
+        this.messageThreadSource.next([message, ...messages])
+      });
+    });
+    this.hubConnection.on('UpdatedGroup', (group: Group) => {
+      if (group.connections.some(x => x.username === othrUserName)) {
+        this.messageThread$.pipe(take(1)).subscribe(messages => {
+          messages.forEach(message => {
+                if(!message.dateRead){
+                  message.dateRead = new Date(Date.now())
+                }
+          });
+          this.messageThreadSource.next([...messages]);
+        });
+      }
+    })
+  }
+  stopHubConnection() {
+    if (this.hubConnection)
+      this.hubConnection.stop()
+        .catch(error => console.log(error));
   }
 }

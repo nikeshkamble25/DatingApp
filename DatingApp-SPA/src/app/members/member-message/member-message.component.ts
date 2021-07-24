@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild } from "@angular/core";
 import { UserService } from "src/app/_services/user.service";
 import { AuthService } from "src/app/_services/auth.service";
 import { AlertyfyService } from "src/app/_services/alertyfy.service";
 import { Message } from "src/app/_models/Message";
 import { tap } from "rxjs/operators";
+import { NgForm } from "@angular/forms";
 
 @Component({
   selector: "app-member-message",
@@ -12,10 +13,11 @@ import { tap } from "rxjs/operators";
 })
 export class MemberMessageComponent implements OnInit {
   @Input() recipientId: number;
+  @ViewChild('messageForm') messageForm:NgForm;
   messages: Message[];
   newMessage: any = {};
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private authService: AuthService,
     private alertify: AlertyfyService
   ) {}
@@ -25,8 +27,7 @@ export class MemberMessageComponent implements OnInit {
   }
   loadMessages() {
     const currentUserId = +this.authService.decodedToken.nameid;
-    this.userService
-      .getMessageThread(this.authService.decodedToken.nameid, this.recipientId)
+    this.userService.messageThread$
       .pipe(
         tap(messages => {
           for (let index = 0; index < messages.length; index++) {
@@ -45,17 +46,12 @@ export class MemberMessageComponent implements OnInit {
       });
   }
   sendMessage() {
-    this.newMessage.recipientId = this.recipientId;
+    this.newMessage.RecipientId = this.recipientId;
+    this.newMessage.SenderId = parseInt(this.authService.decodedToken.nameid);
     this.userService
-      .sendMessage(this.authService.decodedToken.nameid, this.newMessage)
-      .subscribe(
-        (message: Message) => {
-          this.messages.unshift(message);
-          this.newMessage.content = "";
-        },
-        error => {
-          this.alertify.error(error.error);
-        }
-      );
+      .sendMessage(this.newMessage)
+      .then(()=>{
+        this.messageForm.reset();
+      });
   }
 }

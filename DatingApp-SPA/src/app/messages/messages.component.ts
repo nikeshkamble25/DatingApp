@@ -5,6 +5,7 @@ import { AlertyfyService } from "../_services/alertyfy.service";
 import { UserService } from "../_services/user.service";
 import { AuthService } from "../_services/auth.service";
 import { ActivatedRoute } from "@angular/router";
+import { ConfirmService } from "../_services/confirm.service";
 
 @Component({
   selector: "app-messages",
@@ -19,8 +20,9 @@ export class MessagesComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private route: ActivatedRoute,
+    private confirmService: ConfirmService,
     private alertify: AlertyfyService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -41,8 +43,8 @@ export class MessagesComponent implements OnInit {
           this.messages = res.result;
           this.pagination = res.pagination;
         },
-        error => {},
-        () => {}
+        error => { },
+        () => { }
       );
   }
 
@@ -52,10 +54,10 @@ export class MessagesComponent implements OnInit {
   }
 
   deleteMessage(id: number) {
-    this.alertify.confirm(
-      "Are you sure you want to delete this message",
-      () => {
-        this.userService
+    this.confirmService.confirm('Confirm delete message', 'This cannot be undone')
+      .subscribe(result => {
+        if (result) {
+          this.userService
           .deleteMessage(id, this.authService.decodedToken.nameid)
           .subscribe(
             () => {
@@ -69,7 +71,7 @@ export class MessagesComponent implements OnInit {
               this.alertify.error(error.error);
             }
           );
-      }
-    );
+        }
+      });
   }
 }

@@ -7,8 +7,10 @@ import {
   NgxGalleryOptions,
   NgxGalleryImage,
   NgxGalleryAnimation
-} from "ngx-gallery";
+} from "ngx-gallery-9";
 import { TabsetComponent } from "ngx-bootstrap/tabs";
+import { PresenceService } from "src/app/_services/presence.service";
+import { AuthService } from "src/app/_services/auth.service";
 
 @Component({
   selector: "app-member-detail",
@@ -17,14 +19,17 @@ import { TabsetComponent } from "ngx-bootstrap/tabs";
 })
 export class MemberDetailComponent implements OnInit {
   @ViewChild("memberTabs", { static: true }) memberTabs: TabsetComponent;
-  user: User;
+  user: any;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
   constructor(
-    private userService: UserService,
-    private alertify: AlertyfyService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    public presence: PresenceService,
+    public userService: UserService,
+    public authService: AuthService,
+  ) {
+    this.userService
+  }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -45,16 +50,7 @@ export class MemberDetailComponent implements OnInit {
       }
     ];
     this.galleryImages = this.getImages();
-    // this.userService.getUser(+this.route.snapshot.params["id"]).subscribe(
-    //   (user: User) => {
-    //     this.user = user;
-    //   },
-    //   error => {
-    //     this.alertify.error(error);
-    //   }
-    // );
   }
-
   getImages() {
     const imageUrl = [];
     for (const photo of this.user.photos) {
@@ -67,8 +63,15 @@ export class MemberDetailComponent implements OnInit {
     }
     return imageUrl;
   }
-
   selectTab(tabId: number) {
     this.memberTabs.tabs[tabId].active = true;
+    if (this.memberTabs.tabs[tabId].heading === "Messages") {
+      this.userService.createHubConnection(this.user, this.user.username);
+    } else {
+      this.userService.stopHubConnection();
+    }
+  }
+  ngOnDestroy(){
+    this.userService.stopHubConnection();
   }
 }

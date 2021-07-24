@@ -14,7 +14,6 @@ export class RolesModelComponent implements OnInit {
   closeBtnName: string;
   roles: any[];
   constructor(public bsModalRef: BsModalRef) {}
-
   ngOnInit() {}
   updateRoles() {
     this.updateSelectedRoles.emit(this.roles);
