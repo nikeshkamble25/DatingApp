@@ -8,12 +8,12 @@ namespace DatingApp.API.Models
     {
         public Message()
         {
-            
+
         }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int SenderId { get; set; }   
+        public int SenderId { get; set; }
         public virtual User Sender { get; set; }
         public int RecipientId { get; set; }
         public virtual User Recipient { get; set; }

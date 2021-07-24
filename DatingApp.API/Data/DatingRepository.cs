@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DatingApp.API.DTO;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
@@ -12,10 +14,12 @@ namespace DatingApp.API.Data
     public class DatingRepository : IDatingRepository
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public DatingRepository(DataContext context)
+        public DatingRepository(DataContext context, IMapper mapper)
         {
             this._context = context;
+            this._mapper = mapper;
         }
         public void Add<T>(T entity) where T : class
         {
@@ -85,10 +89,6 @@ namespace DatingApp.API.Data
                 return user.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId);
             }
         }
-        public async Task<bool> SaveAll()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
         public async Task<Photo> GetPhoto(int id)
         {
             var photo = await _context.Photos.FirstOrDefaultAsync(photo => photo.Id == id);
@@ -137,16 +137,39 @@ namespace DatingApp.API.Data
                            || m.RecipientId == recipientId && m.SenderId == userId && !m.SenderDeleted)
                            .OrderByDescending(m => m.MessageSent)
                            .ToListAsync();
+            var unreadMessages = messages.Where(messages => messages.DateRead == null && messages.Recipient.Id == userId).ToList();
+            if (unreadMessages.Any())
+            {
+                foreach (var message in unreadMessages)
+                {
+                    message.IsRead = true;
+                    message.DateRead = DateTime.UtcNow;
+                }
+            }
             return messages;
         }
 
-        public async Task<IEnumerable<Message>> GetMessageThread(string userName, string recipientUserName)
+        public async Task<IEnumerable<MessageToReturnDto>> GetMessageThread(string userName, string recipientUserName)
         {
-             var messages = await _context.Messages
-                           .Where(m => m.Recipient.UserName == userName && m.Sender.UserName == recipientUserName && !m.RecipientDeleted
-                           || m.Recipient.UserName == recipientUserName && m.Sender.UserName == userName && !m.SenderDeleted)
-                           .OrderByDescending(m => m.MessageSent)
-                           .ToListAsync();
+            var messages = await _context.Messages
+                          .Include(u => u.Sender).ThenInclude(p => p.Photos)
+                          .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+                          .Where(m => m.Recipient.UserName == userName && m.Sender.UserName == recipientUserName && !m.RecipientDeleted
+                          || m.Recipient.UserName == recipientUserName && m.Sender.UserName == userName && !m.SenderDeleted)
+                          .OrderByDescending(m => m.MessageSent)
+                          .ProjectTo<MessageToReturnDto>(_mapper.ConfigurationProvider)
+                          .ToListAsync();
+            var unreadMessages = messages
+                    .Where(messages => messages.DateRead == null && messages.RecipientUserName == userName)
+                    .ToList();
+            if (unreadMessages.Any())
+            {
+                foreach (var message in unreadMessages)
+                {
+                    message.IsRead = true;
+                    message.DateRead = DateTime.UtcNow;
+                }
+            }
             return messages;
         }
 
@@ -157,20 +180,28 @@ namespace DatingApp.API.Data
 
         public void RemoveConnection(Connection connection)
         {
-              _context.Connections.Remove(connection);
+            _context.Connections.Remove(connection);
         }
 
         public async Task<Connection> GetConnection(string connectionId)
         {
-              return await _context.Connections
-                                .FirstOrDefaultAsync(x=>x.ConnectionId == connectionId);
+            return await _context.Connections
+                              .FirstOrDefaultAsync(x => x.ConnectionId == connectionId);
 
         }
         public async Task<Group> GetMessageGroup(string groupName)
         {
             return await _context.Groups
-                                .Include(x=>x.Connections)
-                                .FirstOrDefaultAsync(x=>x.Name == groupName);
+                                .Include(x => x.Connections)
+                                .FirstOrDefaultAsync(x => x.Name == groupName);
+        }
+
+        public async Task<Group> GetGroupForConnection(string connectionId)
+        {
+            return await _context.Groups
+                .Include(connectionId => connectionId.Connections)
+                .Where(c => c.Connections.Any(x => x.ConnectionId == connectionId))
+                .SingleOrDefaultAsync();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace DatingApp.API.DTO
         public string Content { get; set; }
         public MessageForCreationDto()
         {
-            MessageSent = DateTime.Now;
+            MessageSent = DateTime.UtcNow;
         }
     }
     public class MessageForCreationDtoR
@@ -25,7 +25,7 @@ namespace DatingApp.API.DTO
         public string Content { get; set; }
         public MessageForCreationDtoR()
         {
-            MessageSent = DateTime.Now;
+            MessageSent = DateTime.UtcNow;
         }
     }
 }

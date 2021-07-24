@@ -19,26 +19,26 @@ namespace DatingApp.API.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly IDatingRepository _repo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UsersController(IDatingRepository repo,
+        public UsersController(IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            this._repo = repo;
+            this._unitOfWork = unitOfWork;
             this._mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var userFromRepo = await _repo.GetUser(currentUserId);
+            var userFromRepo = await _unitOfWork.DatingRepository.GetUser(currentUserId);
             userParams.UserId = currentUserId;
             if (string.IsNullOrEmpty(userParams.Gender))
             {
                 userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
             }
 
-            var users = await _repo.GetUsers(userParams);
+            var users = await _unitOfWork.DatingRepository.GetUsers(userParams);
 
             var userToReturn = _mapper.Map<PagedList<User>, List<UserForListDto>>(users, opt =>
             {
@@ -59,14 +59,14 @@ namespace DatingApp.API.Controllers
         [HttpGet("{id}/detail", Name = "GetUserDetail")]
         public async Task<IActionResult> GetUserDetail(int id)
         {
-            var user = await _repo.GetUser(id);
+            var user = await _unitOfWork.DatingRepository.GetUser(id);
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
             return Ok(userToReturn);
         }
          [HttpGet("{id}/edit", Name = "GetUserEdit")]
         public async Task<IActionResult> GetUserEdit(int id)
         {
-            var user = await _repo.GetUser(id);
+            var user = await _unitOfWork.DatingRepository.GetUser(id);
             var userToReturn = _mapper.Map<UserForEditDto>(user);
             return Ok(userToReturn);
         }
@@ -75,9 +75,9 @@ namespace DatingApp.API.Controllers
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var userFromRepo = await _repo.GetUser(id);
+            var userFromRepo = await _unitOfWork.DatingRepository.GetUser(id);
             _mapper.Map(userForUpdateDto, userFromRepo);
-            if (await _repo.SaveAll())
+            if (await _unitOfWork.Complete())
                 return NoContent();
             throw new Exception($"Updating user {id} failed on save");
         }
@@ -86,14 +86,14 @@ namespace DatingApp.API.Controllers
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var user = await _repo.GetUser(recipientId);
+            var user = await _unitOfWork.DatingRepository.GetUser(recipientId);
             if (user == null)
                 return BadRequest("User not found");
-            var like = await _repo.GetLike(id, recipientId);
+            var like = await _unitOfWork.DatingRepository.GetLike(id, recipientId);
             if (like != null)
             {
-                _repo.Delete<Like>(like);
-                if (await _repo.SaveAll())
+                _unitOfWork.DatingRepository.Delete<Like>(like);
+                if (await _unitOfWork.Complete())
                     return Ok();
             }
             else
@@ -103,8 +103,8 @@ namespace DatingApp.API.Controllers
                     LikerId = id,
                     LikeeId = recipientId
                 };
-                _repo.Add<Like>(like);
-                if (await _repo.SaveAll())
+                _unitOfWork.DatingRepository.Add<Like>(like);
+                if (await _unitOfWork.Complete())
                     return Ok();
             }
             return BadRequest("Failed to like user");

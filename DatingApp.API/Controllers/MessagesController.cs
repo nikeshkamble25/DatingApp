@@ -19,20 +19,19 @@ namespace DatingApp.API.Controllers
     [Route("api/users/{userid}/[controller]")]
     public class MessagesController : ControllerBase
     {
-        private readonly IDatingRepository _repo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public MessagesController(IDatingRepository repo, IMapper mapper)
+        public MessagesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
+            this._unitOfWork = unitOfWork;
             this._mapper = mapper;
-            this._repo = repo;
-
         }
         [HttpGet("{id}", Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var messageFromRepo = await _repo.GetMessage(id);
+            var messageFromRepo = await _unitOfWork.DatingRepository.GetMessage(id);
             if (messageFromRepo == null)
                 return NotFound();
             return Ok(messageFromRepo);
@@ -41,19 +40,19 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> CreateMessage(int userId,
             MessageForCreationDto messageForCreationDto)
         {
-            var sender = await _repo.GetUser(userId);
+            var sender = await _unitOfWork.DatingRepository.GetUser(userId);
             if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
             messageForCreationDto.SenderId = userId;
-            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
+            var recipient = await _unitOfWork.DatingRepository.GetUser(messageForCreationDto.RecipientId);
             if (recipient == null)
             {
                 return BadRequest("Could not find user");
             }
             var message = _mapper.Map<Message>(messageForCreationDto);
-            _repo.Add(message);
+            _unitOfWork.DatingRepository.Add(message);
 
-            if (await _repo.SaveAll())
+            if (await _unitOfWork.Complete())
             {
                 var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
                 return CreatedAtRoute("GetMessage", new { userId, id = message.Id }, messageToReturn);
@@ -67,7 +66,7 @@ namespace DatingApp.API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
             messageParams.UserId = userId;
-            var messagesFromRepo = await _repo.GetMessageForUser(messageParams);
+            var messagesFromRepo = await _unitOfWork.DatingRepository.GetMessageForUser(messageParams);
             var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
             Response.AddPagination(messagesFromRepo.CurrentPage,
                 messagesFromRepo.PageSize,
@@ -81,7 +80,7 @@ namespace DatingApp.API.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var messagesFromRepo = await _repo.GetMessageThread(userId, recipientId);
+            var messagesFromRepo = await _unitOfWork.DatingRepository.GetMessageThread(userId, recipientId);
             var messageThread = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
             return Ok(messageThread);
         }
@@ -91,14 +90,14 @@ namespace DatingApp.API.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var messageFromRepo = await _repo.GetMessage(id);
+            var messageFromRepo = await _unitOfWork.DatingRepository.GetMessage(id);
             if (messageFromRepo.SenderId == userId)
                 messageFromRepo.SenderDeleted = true;
             if (messageFromRepo.RecipientId == userId)
                 messageFromRepo.RecipientDeleted = true;
             if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
-                _repo.Delete(messageFromRepo);
-            if (await _repo.SaveAll())
+                _unitOfWork.DatingRepository.Delete(messageFromRepo);
+            if (await _unitOfWork.Complete())
                 return NoContent();
             throw new Exception("Error deleting the message");
         }
@@ -107,12 +106,12 @@ namespace DatingApp.API.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            var message = await _repo.GetMessage(id);
+            var message = await _unitOfWork.DatingRepository.GetMessage(id);
             if (message.RecipientId != userId)
                 return Unauthorized();
             message.IsRead = true;
-            message.DateRead = DateTime.Now;
-            await _repo.SaveAll();
+            message.DateRead = DateTime.UtcNow;
+            await _unitOfWork.Complete();
             return NoContent();
         }
 
